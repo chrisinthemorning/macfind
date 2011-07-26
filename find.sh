@@ -12,16 +12,25 @@ else
 fi
 if [[ $1 =~ ^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$ ]]; then
 IFS=$(echo -en "\n\b")
-	for i in $(grep -i $1 data/*/$searchregex/arptable  | sort -r -k6 | uniq -f3)
+	for i in $(grep -i $1 data/*/$searchregex/arptable  | sort -r -k6 | uniq -f3 )
 	 do
 	  macaddr=`echo $i | cut -f3 -d ":" | tr " " ":" | cut -b 2-18`
 	  echo "IP $1 has MAC $macaddr "
-	  ./find.sh $macaddr $searchregex 
+#	  ./find.sh $macaddr $searchregex 
 	 done
 else
-	for i in "$(grep -i $1  data/*/$searchregex/macaddrs.*)"
-	 do
-	  echo "$i"
+	echo "searchinf for $1"
+	for i in $(grep -i $1  data/*/$searchregex/macaddrs.*)
+	do
+	echo "parsing $i"
+	vlan=`echo $i | cut -d "." -f 5 | cut -d ":" -f 1`
+		dbport=`echo $i | cut -d "." -f 17-100 | cut -d ":" -f 1`
+		nodepath=`echo $i | cut -d "/" -f 1-3`
+		dbportnum=`grep $dbport $nodepath/dbport.$vlan | cut -d":" -f2 | tr -ds " " ""`
+		ifindex=`grep $dbportnum $nodepath/dbporttoifindex.$vlan| cut -d ":" -f2 | tr -ds " " ""`
+		ifalias=`grep .1.3.6.1.2.1.31.1.1.1.1.$ifindex $nodepath/ifalias | cut -d ":" -f2 | tr -ds " " ""`
+		ifdescr=`grep .1.3.6.1.2.1.2.2.1.2.$ifindex $nodepath/ifdescr | cut -d ":" -f2 | tr -ds " " ""`
+		echo $nodepath $ifdescr $ifalias
 	 done
 fi
 
