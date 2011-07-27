@@ -18,7 +18,7 @@ IFS=$(echo -en "\n\b")
 	  echo "IP $1 has MAC $macaddr "
 	 done
 else
-	echo -e "ifindex,vlan,ifDescr,ifAlias,sysname,path"
+	echo -e "ifindex,vlan,ifName,ifAlias,sysname,path"
 	for i in $(grep -i $1  data/*/$searchregex/macaddrs.*)
 	do
 	 vlan=`echo $i | cut -d "." -f 5 | cut -d ":" -f 1`
@@ -26,10 +26,10 @@ else
 	 nodepath=`echo $i | cut -d "/" -f 1-3`
 	 dbportnum=`grep ".1.3.6.1.2.1.17.4.3.1.2.$dbport " $nodepath/dbport.$vlan | cut -d":" -f2 | tr -ds " " ""`
 	 ifindex=`grep ".1.3.6.1.2.1.17.1.4.1.2.$dbportnum " $nodepath/dbporttoifindex.$vlan| cut -d ":" -f2 | tr -ds " " ""`
-	 ifalias=`grep .1.3.6.1.2.1.31.1.1.1.1.$ifindex $nodepath/ifalias | cut -d ":" -f2 | tr -ds " " ""`
-	 ifdescr=`grep .1.3.6.1.2.1.2.2.1.2.$ifindex $nodepath/ifdescr | cut -d ":" -f2 | tr -ds " " ""`
+	 ifalias=`grep ".1.3.6.1.2.1.31.1.1.1.18.$ifindex " $nodepath/ifalias | cut -d ":" -f2 | tr -ds " " ""`
+	 ifname=`grep ".1.3.6.1.2.1.31.1.1.1.1.$ifindex " $nodepath/ifname | cut -d ":" -f2 | tr -ds " " ""`
 	 sysname=`cat $nodepath/sysname | cut -d ":" -f2 | tr -ds " " ""`
-	echo $ifindex,$vlan,$ifdescr,$ifalias,$sysname,$nodepath
+	echo $ifindex,$vlan,$ifname,$ifalias,$sysname,$nodepath
 	done
 fi
 
