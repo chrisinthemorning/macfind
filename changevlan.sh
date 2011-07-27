@@ -17,8 +17,8 @@ if [ $4 == $currentvlan ]
 				then
 					echo "Success"
 					transaction=$RANDOM
-                                        snmpset -Obn  -v1 -c $2 $1 .1.3.6.1.4.1.9.9.96.1.1.1.1.3.$transaction integer 3  >/dev/null 2>&1
-                                        snmpset -Obn  -v1 -c $2 $1 .1.3.6.1.4.1.9.9.96.1.1.1.1.4.$transaction integer 4  >/dev/null 2>&1
+                                        snmpset -Obn  -v1 -c $2 $1 .1.3.6.1.4.1.9.9.96.1.1.1.1.3.$transaction integer 4  >/dev/null 2>&1
+                                        snmpset -Obn  -v1 -c $2 $1 .1.3.6.1.4.1.9.9.96.1.1.1.1.4.$transaction integer 3  >/dev/null 2>&1
                                         snmpset -Obn  -v1 -c $2 $1 .1.3.6.1.4.1.9.9.96.1.1.1.1.14.$transaction integer 1  >/dev/null 2>&1
 					echo "Writing from Memory to Startup config in switch $1"
 					sleep 3
