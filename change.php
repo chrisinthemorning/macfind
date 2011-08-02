@@ -46,7 +46,11 @@ if (isset($_GET['community'])){
 			foreach ($stdout as $line)
                 	{
 				$options = explode(" ", $line);
-                        	echo "<option value='" . $options[0] . "'>" . $options[0] . "-" . $options[1]  . "</option>" ;
+				if ($options[0] == $currvlan) {
+					echo "<option selected=true value='" . $options[0] . "'>" . $options[0] . "-" . $options[1]  . "</option>" ;	
+				} else {
+                        		echo "<option value='" . $options[0] . "'>" . $options[0] . "-" . $options[1]  . "</option>" ;
+				}
                 	}
 			?>
 			</select></td>
