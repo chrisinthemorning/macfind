@@ -3,19 +3,29 @@ if (isset($_GET['find'])){
 	echo 'Seached for: ' . $_GET['find'] . '<br>';
 	$exit = cmd_exec( './find.sh ' . $_GET['find'] . ' ' . $_GET['searchregex'],$stdout, $stderr);
 ?>
-	<table>
+	<table border="1" cellspacing="0" cellpadding="4">
 <?php
 	foreach ($stdout as $line)
 	{
 		$pieces = explode(",", $line);
 		if (isset($_GET['mac'])) {
 			$pieces = explode(",", $line);
-			$url = "<tr><td><a href='change.php?vlan=" . $pieces[1] . "&ifindex=" .  $pieces[0] . "&datapath=" . urlencode($pieces[5]) . "'>$line</a></td></tr>";
+			$url = "<td><a href='change.php?vlan=" . $pieces[1] . "&ifindex=" .  $pieces[0] . "&datapath=" . urlencode($pieces[5]) . "'>$pieces[1]</a></td>";
 		} else {
 			$pieces = explode(" ", $line);
-			$url = "<tr><td><a href='find.php?mac=" . $pieces[4] . "&find=" . $pieces[4] . "&searchregex=" .  $_GET['searchregex'] . "'>$line</a></td></tr>";
+			$url = "<td><a href='find.php?mac=" . $pieces[4] . "&find=" . $pieces[4] . "&searchregex=" .  $_GET['searchregex'] . "'>$pieces[4]</a></td>";
 		}
-		echo $url;
+		echo "<tr>";
+		for($i = 0; $i < count($pieces); $i++){
+			if ($i==1 && isset($_GET['mac'])) {
+				echo $url;
+			} elseif ($i==4 && !( isset($_GET['mac']))) {
+				echo $url;
+			} else {
+				echo "<td>$pieces[$i]</td>";
+			}
+		}
+		echo "</tr>";
 	}
 ?>
         </table>
