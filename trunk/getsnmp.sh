@@ -4,7 +4,7 @@
 
 date=`date +"%y-%m-%d-%H"`
 
-sysname=`snmpbulkwalk -Obn -v2c -c $2 $1 sysName`
+sysname=`snmpbulkwalk -Obn -v2c -c $2 $1 .1.3.6.1.2.1.1.5.0`
 
 if [[ $sysname == *Timeout* ]]
 then
@@ -36,7 +36,7 @@ echo -n "Sending Ping to "
 	for i in $(cat data/$1/$date/thingstoping | sort | uniq)
 	do
 		echo -n "$i "
-		fping -t1 -i1 -c1 -r1  -qg $i  >> pingoutput	 
+		fping -t1 -i1 -c1 -r1  -qg $i >/dev/null 2>&1 
 	done
 echo "...done"
 
