@@ -9,8 +9,8 @@ currentvlan=`snmpget -Obn -v2c -c $2 $1 1.3.6.1.4.1.9.9.68.1.2.2.1.2.$3 | cut -d
 
 if [ $4 == $currentvlan ]
 	then
-	trunkmode=`snmpget -Obn -v2c -c $2 $1 1.3.6.1.4.1.9.9.46.1.6.1.1.16.$3 | cut -d ":" -f2 | tr -ds " " ""`
-	if [ $trunkmode == "notApplicable(6)" ]
+	trunkmode=`snmpget -Obne -v2c -c $2 $1 1.3.6.1.4.1.9.9.46.1.6.1.1.16.$3 | cut -d ":" -f2 | tr -ds " " ""`
+	if [ $trunkmode == "6" ]
 		then
 			outputcode=`snmpset -Obn  -v1 -c $2 $1 1.3.6.1.4.1.9.9.68.1.2.2.1.2.$3 integer $5  | cut -d ":" -f2 | tr -ds " " ""`
 			if [ $outputcode == $5 ]
