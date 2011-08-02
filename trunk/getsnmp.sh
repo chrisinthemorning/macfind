@@ -16,6 +16,20 @@ mkdir -p data/$1/$date
 
 echo $sysname > data/$1/$date/sysname
 
+echo -n "Getting ipAddrTable for $1 ...."
+        snmpbulkwalk  -Obn -v2c -c $2 $1  .1.3.6.1.2.1.4.20.1 > data/$1/$date/ipaddrtable
+echo "done"
+
+echo -n "Sending Ping to "
+	for i in $(grep ".1.3.6.1.2.1.4.20.1.1\."  data/$1/$date/ipaddrtable  |  cut -d "=" -f2 | tr -sd " " "" | cut -d ":" -f2)
+	do
+		smask=`grep ".1.3.6.1.2.1.4.20.1.3.$i "  data/$1/$date/ipaddrtable  |  cut -d "=" -f2 | tr -sd " " "" | cut -d ":" -f2`
+		netid=`ipcalc -nbc  $i $smask  | grep Network | cut -d":" -f2 | tr -sd " " ""`
+		echo -n "$netid "
+	 	fping -t1 -i1 -c1 -r1  -qg $netid  >/dev/null 2>&1
+	done
+echo "...done"
+
 echo -n "Getting ARP Table for $1 ...."
 snmpbulkwalk -Obn -v2c -c $2 $1 .1.3.6.1.2.1.3.1.1.2 > data/$1/$date/arptable
 echo "done"
