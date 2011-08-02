@@ -19,12 +19,14 @@ if (isset($_GET['community'])){
 		}
 } else {
 	$currvlan=substr($_GET['vlan'],4);
+	$pieces = explode("/",urldecode($_GET['datapath']));
+	$exit = cmd_exec( 'cat ' . trim(urldecode($_GET['datapath'])) . '/vlannames  | cut -d "." -f 17 | cut -d " " -f1,4',$stdout, $stderr);
 ?>
 <form action="change.php" method="get" name="find">
 	<table>
 		<tr>
 			<td>device ip:</td>
-			<td><input class="formtext" name="device" size="12" type="text" value="<?=$_GET['device'];?>">
+			<td><input class="formtext" name="device" size="12" type="text" value="<?=$pieces[1];?>">
 			</td>
 		</tr>
 		<tr>
@@ -39,8 +41,15 @@ if (isset($_GET['community'])){
                 </tr>
 		<tr>
                         <td>New Vlan</td>
-                        <td><input class="formtext" name="newvlan" size="12" type="text">
-                        </td>
+			<td><select name="newvlan">
+			<?php
+			foreach ($stdout as $line)
+                	{
+				$options = explode(" ", $line);
+                        	echo "<option value='" . $options[0] . "'>" . $options[0] . "-" . $options[1]  . "</option>" ;
+                	}
+			?>
+			</select></td>
                 </tr>
 		<tr>
                        <td>Community</td>
