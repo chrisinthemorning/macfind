@@ -10,8 +10,7 @@ if (isset($_GET['find'])){
 		$pieces = explode(",", $line);
 		if (isset($_GET['mac'])) {
 			$pieces = explode(",", $line);
-			$subpieces = explode("/",$pieces[5]);
-			$url = "<tr><td><a href='change.php?vlan=" . $pieces[1] . "&ifindex=" .  $pieces[0] . "&device=" .   $subpieces[1] . "'>$line</a></td></tr>";
+			$url = "<tr><td><a href='change.php?vlan=" . $pieces[1] . "&ifindex=" .  $pieces[0] . "&datapath=" . urlencode($pieces[5]) . "'>$line</a></td></tr>";
 		} else {
 			$pieces = explode(" ", $line);
 			$url = "<tr><td><a href='find.php?mac=" . $pieces[4] . "&find=" . $pieces[4] . "&searchregex=" .  $_GET['searchregex'] . "'>$line</a></td></tr>";
@@ -28,7 +27,7 @@ if (isset($_GET['find'])){
 		}
 } else {
 ?>
-<form action="c.php" method="get" name="find">
+<form action="find.php" method="get" name="find">
 	<table>
 		<tr>
 			<td>IP or MAC:</td>
