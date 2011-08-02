@@ -4,7 +4,7 @@
 
 date=`date +"%y-%m-%d-%H"`
 
-sysname=`snmpbulkwalk -Obn -v2c -c $2 $1 .1.3.6.1.2.1.1.5.0`
+sysname=`snmpbulkwalk -Obn -v2c -c $2 $1 .1.3.6.1.2.1.1.5.0  2>&1`
 
 if [[ $sysname == *Timeout* ]]
 then
