@@ -21,12 +21,22 @@ echo -n "Getting ipAddrTable for $1 ...."
 echo "done"
 
 echo -n "Sending Ping to "
+	rm data/$1/$date/thingstoping  >/dev/null 2>&1
 	for i in $(grep ".1.3.6.1.2.1.4.20.1.1\."  data/$1/$date/ipaddrtable  |  cut -d "=" -f2 | tr -sd " " "" | cut -d ":" -f2)
 	do
 		smask=`grep ".1.3.6.1.2.1.4.20.1.3.$i "  data/$1/$date/ipaddrtable  |  cut -d "=" -f2 | tr -sd " " "" | cut -d ":" -f2`
-		netid=`ipcalc -nbc  $i $smask  | grep Network | cut -d":" -f2 | tr -sd " " ""`
-		echo -n "$netid "
-	 	fping -t1 -i1 -c1 -r1  -qg $netid  >/dev/null 2>&1
+		netid=`ipcalc -nb  $i $smask  | grep Network | cut -d":" -f2 | tr -sd " " ""`
+		cidr=`echo $netid | cut -d "/" -f2`
+		if [[ "${cidr:-0}" -ge 22 ]]
+		then
+			echo "$netid " >> data/$1/$date/thingstoping
+		fi
+# >/dev/null 2>&1
+	done
+	for i in $(cat data/$1/$date/thingstoping | sort | uniq)
+	do
+		echo -n "$i "
+		fping -t1 -i1 -c1 -r1  -qg $i  >> pingoutput	 
 	done
 echo "...done"
 
