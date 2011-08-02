@@ -1,19 +1,13 @@
 <?php
 if (isset($_GET['community'])){
-	echo 'Seached for: ' . $_GET['community'] . '<br>';
-	$exit = cmd_exec( './changevlan.sh ' . $_GET['community'] . ' ' . $_GET['searchregex'],$stdout, $stderr);
+	echo 'Changing to Vlan : ' . $_GET['newvlan'] . '<br>';
+	$exit = cmd_exec( './changevlan.sh ' .  $_GET['device'] . ' ' . $_GET['community'] . ' ' . $_GET['ifindex'] . ' ' . $_GET['currvlan'] . ' ' . $_GET['newvlan'],$stdout, $stderr);
 ?>
 	<table>
 <?php
 	foreach ($stdout as $line)
 	{
-		$pieces = explode(" ", $line);
-		if (isset($_GET['mac'])) {
-			$url = "<tr><td><a href='change.php?mac=" . $pieces[4] . "&find=" . $_GET['find'] . "&searchregex=" .  $_GET['searchregex'] . "'>$line</a></td></tr>";
-		} else {
-			$url = "<tr><td><a href='find.php?mac=" . $pieces[4] . "&find=" . $pieces[4] . "&searchregex=" .  $_GET['searchregex'] . "'>$line</a></td></tr>";
-		}
-		echo $url;
+		echo $line;
 	}
 ?>
         </table>
@@ -26,7 +20,7 @@ if (isset($_GET['community'])){
 } else {
 	$currvlan=substr($_GET['vlan'],4);
 ?>
-<form action="c.php" method="get" name="find">
+<form action="change.php" method="get" name="find">
 	<table>
 		<tr>
 			<td>device ip:</td>
